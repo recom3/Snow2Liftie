@@ -1,7 +1,9 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 'Recon Instruments:Recon Instruments SDK Add-On:16'
+    //recom3 2023-06-07: commented sdk
+    //compileSdkVersion 'Recon Instruments:Recon Instruments SDK Add-On:16'
+    compileSdkVersion 21
     buildToolsVersion "22.0.1"
     defaultConfig {
         applicationId 'nl.onrequest.snow2liftie'

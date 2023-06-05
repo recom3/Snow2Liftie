@@ -5,3 +5,8 @@
 .DS_Store
 /build
 /captures
+
+reconUI/build
+*.iml
+app/*.iml
+reconUI/*.iml
