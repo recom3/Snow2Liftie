@@ -10,3 +10,10 @@ reconUI/build
 *.iml
 app/*.iml
 reconUI/*.iml
+
+screen/
+screen*.png
+screen*.rgba
+reconjet.gif
+reconjet.psd
+*capture.sh

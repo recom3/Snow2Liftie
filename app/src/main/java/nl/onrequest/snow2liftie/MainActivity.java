@@ -1,6 +1,9 @@
 package nl.onrequest.snow2liftie;
 
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothClass;
 import android.bluetooth.BluetoothDevice;
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -10,8 +13,9 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
 
-import com.reconinstruments.os.HUDOS;
+//import com.reconinstruments.os.HUDOS;
 import com.reconinstruments.os.connectivity.HUDConnectivityManager;
+import com.reconinstruments.os.connectivity.HUDWebService;
 import com.reconinstruments.ui.carousel.CarouselActivity;
 import com.reconinstruments.ui.carousel.StandardCarouselItem;
 
@@ -19,6 +23,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
@@ -26,6 +31,7 @@ import java.io.InputStreamReader;
 public class MainActivity extends CarouselActivity {
 
     private static final String mac_file = "mac.json";
+    public static boolean useNewBTConn = true;
 
     HUDWebService mHUDWebService;
 
@@ -56,7 +62,8 @@ public class MainActivity extends CarouselActivity {
         super.onCreate(savedInstanceState);
         Helper.getInstance().setActivity(this);
         Helper.getInstance().setSharedPreferences(this.getSharedPreferences("nl.onrequest.snow2liftie", Context.MODE_PRIVATE));
-        Helper.getInstance().setHUDConnectivityManager((HUDConnectivityManager) HUDOS.getHUDService(HUDOS.HUD_CONNECTIVITY_SERVICE));
+        //Recom3: disabled load of binary library
+        //Helper.getInstance().setHUDConnectivityManager((HUDConnectivityManager) HUDOS.getHUDService(HUDOS.HUD_CONNECTIVITY_SERVICE));
         Helper.getInstance().UpdateResortFile();
         setContentView(R.layout.activity_main);
         getCarousel().setPageMargin(30);
@@ -129,4 +136,55 @@ public class MainActivity extends CarouselActivity {
             MainActivity.this.mHUDWebService = null;
         }
     };
+
+    //The BroadcastReceiver that listens for bluetooth broadcasts
+    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+
+            if (BluetoothDevice.ACTION_FOUND.equals(action)) {
+                //Device found
+            }
+            else if (BluetoothDevice.ACTION_ACL_CONNECTED.equals(action)) {
+                //Device is now connected
+                BluetoothClass btClass = device.getBluetoothClass();
+                if(btClass.getDeviceClass()== BluetoothClass.Device.PHONE_SMART
+                        || btClass.getDeviceClass()== BluetoothClass.Device.PHONE_CELLULAR)
+                {
+                    phoneConnected = true;
+                    phoneAddress = device.getAddress();
+                    SaveMacDataToFile(phoneAddress);
+                    mHUDWebService.connect();
+                }
+            }
+            else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
+                //Done searching
+            }
+            else if (BluetoothDevice.ACTION_ACL_DISCONNECT_REQUESTED.equals(action)) {
+                //Device is about to disconnect
+            }
+            else if (BluetoothDevice.ACTION_ACL_DISCONNECTED.equals(action)) {
+                //Device has disconnected
+                BluetoothClass btClass = device.getBluetoothClass();
+                if(btClass.getDeviceClass()== BluetoothClass.Device.PHONE_SMART
+                        || btClass.getDeviceClass()== BluetoothClass.Device.PHONE_CELLULAR)
+                {
+                    phoneConnected = false;
+                }
+            }
+        }
+    };
+
+    private void SaveMacDataToFile(String data) {
+        FileOutputStream fos;
+        try {
+            fos = this.openFileOutput(mac_file, Context.MODE_PRIVATE);
+            fos.write(data.getBytes());
+            fos.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

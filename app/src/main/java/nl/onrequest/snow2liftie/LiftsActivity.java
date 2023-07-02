@@ -158,7 +158,8 @@ public class LiftsActivity extends SimpleListActivity implements LocationListene
         filter = new IntentFilter(ResponseReceiver.ACTION_RESP);
         filter.addCategory(Intent.CATEGORY_DEFAULT);
         registerReceiver(receiver, filter);
-        Helper.getInstance().mHUDConnectivityManager.register(this);
+        //This is not implemented yet
+        //Helper.getInstance().mHUDConnectivityManager.register(this);
     }
 
     public void SetContent() {
@@ -278,7 +279,8 @@ public class LiftsActivity extends SimpleListActivity implements LocationListene
     public void onPause() {
         super.onPause();
         unregisterReceiver(receiver);
-        Helper.getInstance().mHUDConnectivityManager.unregister(this);
+        //This is not implemented yet
+        //Helper.getInstance().mHUDConnectivityManager.unregister(this);
         handler.removeCallbacks(runnable);
     }
 
