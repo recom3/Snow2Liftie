@@ -1,5 +1,7 @@
 # Snow2Liftie
 
+02.07.2023 -> Added com.reconinstruments.os.connectivity.HUDConnectivityManager and supporting classes to communicate through phone to the Web.
+
 Snow2Liftie is an app for the Recon Instruments Snow2.
 The app shows the liftstatus from the chosen resort.
 
