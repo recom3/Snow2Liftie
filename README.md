@@ -1,5 +1,13 @@
 # Snow2Liftie
 
+02.07.2023 -> Added com.reconinstruments.os.connectivity.HUDConnectivityManager and supporting classes to communicate through phone to the Web.
+Now Ice3 can be downloaded without login from [www.recom3.com](https://www.recom3.com/)
+So proceed in this way:
+1. Install the apk.
+2. Connect in Android via Bluetooth with goggles / Recon Jet glasses.
+3. Open the Ice3 app in phone.
+4. Execute Snow2Liftie App in goggles and see lifts status.
+
 Snow2Liftie is an app for the Recon Instruments Snow2.
 The app shows the liftstatus from the chosen resort.
 
