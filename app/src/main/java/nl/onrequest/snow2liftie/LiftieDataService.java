@@ -64,7 +64,7 @@ public class LiftieDataService extends IntentService {
         String result = "";
         try {
             //Get Request
-            HUDHttpRequest request = new HUDHttpRequest(HUDHttpRequest.RequestMethod.GET, "http://liftie.info/api/resort/" + Helper.getInstance().current_resort.getPath());
+            HUDHttpRequest request = new HUDHttpRequest(HUDHttpRequest.RequestMethod.GET, "https://liftie.info/api/resort/" + Helper.getInstance().current_resort.getPath());
             HUDHttpResponse response = Helper.getInstance().mHUDConnectivityManager.sendWebRequest(request);
             if (response.hasBody()) {
                 result = new String(response.getBody());

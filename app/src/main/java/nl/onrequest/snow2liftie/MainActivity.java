@@ -64,7 +64,10 @@ public class MainActivity extends CarouselActivity {
         Helper.getInstance().setSharedPreferences(this.getSharedPreferences("nl.onrequest.snow2liftie", Context.MODE_PRIVATE));
         //Recom3: disabled load of binary library
         //Helper.getInstance().setHUDConnectivityManager((HUDConnectivityManager) HUDOS.getHUDService(HUDOS.HUD_CONNECTIVITY_SERVICE));
-        Helper.getInstance().UpdateResortFile();
+        //This is null not working: services has to be bind
+        //Helper.getInstance().setHUDConnectivityManager(MainActivity.this.mHUDWebService.hudConnectivityManager);
+
+        //Helper.getInstance().UpdateResortFile();
         setContentView(R.layout.activity_main);
         getCarousel().setPageMargin(30);
         getCarousel().setContents(
@@ -128,7 +131,15 @@ public class MainActivity extends CarouselActivity {
             HUDWebService.LocalBinder binder = (HUDWebService.LocalBinder) param1IBinder;
             MainActivity.this.mHUDWebService = binder.getService();
 
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
             Helper.getInstance().setHUDConnectivityManager(MainActivity.this.mHUDWebService.hudConnectivityManager);
+
+            Helper.getInstance().UpdateResortFile();
         }
 
         @Override
@@ -149,6 +160,9 @@ public class MainActivity extends CarouselActivity {
             }
             else if (BluetoothDevice.ACTION_ACL_CONNECTED.equals(action)) {
                 //Device is now connected
+
+                Log.i("MainActivity", "ACTION_ACL_CONNECTED");
+
                 BluetoothClass btClass = device.getBluetoothClass();
                 if(btClass.getDeviceClass()== BluetoothClass.Device.PHONE_SMART
                         || btClass.getDeviceClass()== BluetoothClass.Device.PHONE_CELLULAR)
@@ -156,6 +170,9 @@ public class MainActivity extends CarouselActivity {
                     phoneConnected = true;
                     phoneAddress = device.getAddress();
                     SaveMacDataToFile(phoneAddress);
+
+                    Log.i("MainActivity", "SaveMacDataToFile");
+
                     mHUDWebService.connect();
                 }
             }

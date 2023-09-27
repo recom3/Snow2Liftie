@@ -25,7 +25,7 @@ import java.util.UUID;
 import nl.onrequest.snow2liftie.MainActivity;
 
 /**
- * Created by Chus on 14/01/2023.
+ * Created by Recom on 14/01/2023.
  * This library is missing the method push
  * (check the HUDConnectivityService service in Snow2 project to see how it works)
  * The push method should be used to push messages to the phone, using the:
@@ -49,7 +49,7 @@ import nl.onrequest.snow2liftie.MainActivity;
  */
 
 public class HUDWebService extends Service {
-    private static final String a = HUDWebService.class.getName();
+    private static final String TAG = HUDWebService.class.getName();
     private static final String f2143a = HUDWebService.class.getName();
 
     //private HUDStateUpdateListener b;
@@ -75,15 +75,15 @@ public class HUDWebService extends Service {
         }
 
         public final void a(IHUDConnectivity.ConnectionState param1ConnectionState) {
-            Log.d(HUDWebService.this.a, "onConnectionStateChanged(): " + param1ConnectionState);
+            Log.d(HUDWebService.this.TAG, "onConnectionStateChanged(): " + param1ConnectionState);
         }
 
         public final void a(IHUDConnectivity.NetworkEvent param1NetworkEvent, boolean param1Boolean) {
-            Log.d(HUDWebService.this.a, "onNetworkEvent(): " + param1NetworkEvent + ", hasNetworkAccess: " + param1Boolean);
+            Log.d(HUDWebService.this.TAG, "onNetworkEvent(): " + param1NetworkEvent + ", hasNetworkAccess: " + param1Boolean);
         }
 
         public final void a(String param1String) {
-            Log.d(HUDWebService.this.a, "onDeviceName(): " + param1String);
+            Log.d(HUDWebService.this.TAG, "onDeviceName(): " + param1String);
         }
     };
 
@@ -137,7 +137,7 @@ public class HUDWebService extends Service {
      * @param hud_state
      */
     static void a(HUDWebService hUDWebService, HUDStateUpdateListener.HUD_STATE hud_state) {
-        String tag = a;
+        String tag = TAG;
         Log.i(tag, "updateState" + hud_state);
         switch (AnonymousClass3.f2147a[hud_state.ordinal()]) {
             case 1:
@@ -244,7 +244,7 @@ public class HUDWebService extends Service {
         };
         this.hudStateUpdateListener.a(this);
 
-        //JC: 15.05.2023
+        //Rec3: 15.05.2023
         boolean bForce = true;
         if(bForce)
         {
@@ -254,13 +254,13 @@ public class HUDWebService extends Service {
 
     public void onDestroy() {
         super.onDestroy();
-        Log.d(a, "onDestroy()");
+        Log.i(TAG, "onDestroy()");
         unregisterReceiver((BroadcastReceiver)this.hudStateUpdateListener);
         b();
     }
 
     public int onStartCommand(Intent paramIntent, int paramInt1, int paramInt2) {
-        Log.d(a, "onStartCommand()");
+        Log.i(TAG, "onStartCommand()");
         //return 1;
         return START_STICKY;
     }
@@ -303,46 +303,61 @@ public class HUDWebService extends Service {
             {
                 String address = "";
                 //if(MainActivity.phoneConnected) {
-
-                //Hwi
-                //address = "D8:C7:71:E1:95:FA";
+                
                 address = MainActivity.phoneAddress;
 
-                /*
-                Iterator<BluetoothDevice> iterator = BluetoothAdapter.getDefaultAdapter().getBondedDevices().iterator();
-                while (true) {
-                    if (!iterator.hasNext()) {
-                        break;
-                    }
-                    BluetoothDevice bluetoothDevice = iterator.next();
-                    BluetoothClass btClass = bluetoothDevice.getBluetoothClass();
-
-                    String a = bluetoothDevice.getAddress();
-
-                    if(btClass.getDeviceClass()== BluetoothClass.Device.PHONE_SMART
-                            || btClass.getDeviceClass()== BluetoothClass.Device.PHONE_CELLULAR)
-                    {
-                        int bh = BluetoothAdapter.getDefaultAdapter().getProfileConnectionState(BluetoothHeadset.HEALTH);
-                        if(bh != BluetoothHeadset.STATE_DISCONNECTED)
-                        {
-                            address = bluetoothDevice.getAddress();
-                            break;
-                        }
-                    }
-                }//end while
-                */
+                if(address.isEmpty()) {
+                    address = getRemoteDeviceAddress();
+                }
 
                 if(!address.isEmpty()) {
+                    Log.i(TAG, "Connecting to remote address: " + address);
                     hUDConnectivityManager.mHUDBTService.connect(address);
+                }
+                else
+                {
+                    Log.i(TAG, "Remote address is null");
                 }
                 //}
             }
 
             return;
         } catch (Exception e) {
-            Log.d(f2143a, "Failed to init HUDConnectivityManager", e);
+            Log.e(f2143a, "Failed to init HUDConnectivityManager", e);
             return;
         }
+    }
+
+    public String getRemoteDeviceAddress()
+    {
+        String address = "";
+
+        Iterator<BluetoothDevice> iterator = BluetoothAdapter.getDefaultAdapter().getBondedDevices().iterator();
+        while (true) {
+            if (!iterator.hasNext()) {
+                break;
+            }
+            BluetoothDevice bluetoothDevice = iterator.next();
+            BluetoothClass btClass = bluetoothDevice.getBluetoothClass();
+
+            String a = bluetoothDevice.getAddress();
+
+            if(btClass.getDeviceClass()== BluetoothClass.Device.PHONE_SMART
+                    || btClass.getDeviceClass()== BluetoothClass.Device.PHONE_CELLULAR)
+            {
+                //We keep the address just in case...
+                address = bluetoothDevice.getAddress();
+
+                int bh = BluetoothAdapter.getDefaultAdapter().getProfileConnectionState(BluetoothHeadset.HEALTH);
+                if(bh != BluetoothHeadset.STATE_DISCONNECTED)
+                {
+                    address = bluetoothDevice.getAddress();
+                    break;
+                }
+            }
+        }//end while
+
+        return address;
     }
 }
 

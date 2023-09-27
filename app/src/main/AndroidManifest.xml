@@ -24,12 +24,22 @@
         <activity android:name=".LiftsActivity"></activity>
         <activity android:name=".SettingsActivity"></activity>
 
+        <!--
         <uses-library android:name="com.reconinstruments.lib" />
         <uses-library android:name="com.reconinstruments.os" />
+        -->
 
         <service
             android:name=".LiftieDataService"
             android:exported="false"></service>
+
+        <service
+            android:name="com.reconinstruments.os.connectivity.HUDWebService"
+            android:enabled="true">
+            <intent-filter>
+                <action android:name="com.reconinstruments.os.connectivity.HUDWEBSERVICE" />
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>

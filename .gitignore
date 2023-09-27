@@ -17,3 +17,5 @@ screen*.rgba
 reconjet.gif
 reconjet.psd
 *capture.sh
+
+/app/release

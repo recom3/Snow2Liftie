@@ -266,7 +266,7 @@ public class Helper {
         File file = new File(path);
         //get resort file only once a day
         if (!file.exists() || diff >= (60000 * 60 * 24) ) {//60000 sec * 60 min * 24 hours = 1 day
-            String url = "http://liftie.info/api/meta";
+            String url = "https://liftie.info/api/meta";
             new GetMetaData(url).execute();
         }
     }

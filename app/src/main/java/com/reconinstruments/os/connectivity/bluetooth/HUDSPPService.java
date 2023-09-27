@@ -23,7 +23,7 @@ public class HUDSPPService extends HUDBTBaseService {
     public static final String[] g = new String[] { "3007e231-e2af-4742-bcc4-70648bf22599", "798e999d-5fe8-4199-bc03-ab87f8545f1a", "5ed5a87f-15af-44c4-affc-9cbb686486e5", "c88436a2-0526-47c3-b365-c8519a5ea4e1" };
     private static final int h = 4;
     private static int i = 4;
-    private final UUID[] j;
+    private final UUID[] mUuid;
     private final String k;
 
     private ConnectThread[] l;
@@ -41,7 +41,7 @@ public class HUDSPPService extends HUDBTBaseService {
 
         public AcceptThread(int i) {
             this.c = i;
-            this.f2737b = a("H_HUDSPPService_" + i, HUDSPPService.this.j[i]);
+            this.f2737b = a("H_HUDSPPService_" + i, HUDSPPService.this.mUuid[i]);
             StringBuilder sb = new StringBuilder("created accept socket # ").append(String.valueOf(i)).append("/").append(HUDSPPService.i);
             Log.i(this.getClass().getName(), sb.toString());
         }
@@ -303,7 +303,7 @@ public class HUDSPPService extends HUDBTBaseService {
 
     public HUDSPPService(IHUDConnectivity iHUDConnectivity) throws Exception {
         super(iHUDConnectivity);
-        this.j = new UUID[i];
+        this.mUuid = new UUID[i];
         this.k = "HUDSPPService";
         this.n = new SparseArray<>();
         createSppOutStreamWriter();
@@ -330,7 +330,7 @@ public class HUDSPPService extends HUDBTBaseService {
         }
         int i = 1;
         for (int i2 = 0; i2 < i; i2++) {
-            this.j[i2] = UUID.fromString(g[i2]);
+            this.mUuid[i2] = UUID.fromString(g[i2]);
         }
         this.n = new SparseArray<>();
         this.sppOutStreamWriter = new SPPOutStreamWriter(i);

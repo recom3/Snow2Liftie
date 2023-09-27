@@ -50,7 +50,8 @@ public class LiftsActivity extends SimpleListActivity implements LocationListene
     private ResponseReceiver receiver;
     private Animation animRotate;
     private IntentFilter filter;
-    private boolean hasNetworkAccess;
+    //!!!set to true
+    private boolean hasNetworkAccess = true;
 
     Runnable runnable = new Runnable()
     {

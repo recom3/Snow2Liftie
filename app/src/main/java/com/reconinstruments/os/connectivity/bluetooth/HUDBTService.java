@@ -125,7 +125,7 @@ public class HUDBTService {
      * @throws IOException
      */
     public synchronized void startListening() throws IOException {
-        if (DEBUG) Log.d(TAG, "start");
+        if (DEBUG) Log.i(TAG, "start");
 
         // Cancel any thread attempting to make a connection
         if (mConnectThread != null) {
@@ -193,7 +193,7 @@ public class HUDBTService {
             throw new NullPointerException("Device address can't be null");
         }
 
-        Log.d(TAG, "connect to: " + address);
+        Log.i(TAG, "connect to: " + address);
 
         // Cancel any thread attempting to make a connection
         if (mState == IHUDConnectivity.ConnectionState.CONNECTING) {
@@ -224,7 +224,7 @@ public class HUDBTService {
      * @throws IOException
      */
     public synchronized void connected(BluetoothDevice device, BluetoothSocket requestSocket, BluetoothSocket responseSocket) throws IOException {
-        if (DEBUG) Log.d(TAG, "connected");
+        if (DEBUG) Log.i(TAG, "connected");
 
         // Cancel the thread that completed the connection
         if (mConnectThread != null) {
@@ -260,7 +260,7 @@ public class HUDBTService {
      * @param state An integer defining the current connection state
      */
     private synchronized void setState(IHUDConnectivity.ConnectionState state) {
-        if (DEBUG) Log.d(TAG, "setState() " + mState + " -> " + state);
+        if (DEBUG) Log.i(TAG, "setState() " + mState + " -> " + state);
         mState = state;
 
         mHUDConnectivity.onConnectionStateChanged(state);
@@ -381,7 +381,7 @@ public class HUDBTService {
 
         @Override
         public void run() {
-            if (DEBUG) Log.d(TAG, "BEGIN mAcceptThread" + this);
+            if (DEBUG) Log.i(TAG, "BEGIN mAcceptThread" + this);
             setName("AcceptThread");
 
             BluetoothSocket reqSocket = null;
@@ -446,7 +446,7 @@ public class HUDBTService {
         }
 
         public void cancel() {
-            if (DEBUG) Log.d(TAG, "CANCEL " + this);
+            if (DEBUG) Log.i(TAG, "CANCEL " + this);
             try {
                 mmRequestServerSocket.close();
                 mmResponseServerSocket.close();
@@ -472,7 +472,7 @@ public class HUDBTService {
         private final OutputStream mmOutResponseStream;
 
         public ConnectedThread(BluetoothSocket requestSocket, BluetoothSocket responseSocket) throws IOException {
-            Log.d(TAG, "CREATE ConnectedThread");
+            Log.i(TAG, "CREATE ConnectedThread");
 
             mmRequestSocket = requestSocket;
             mmResponseSocket = responseSocket;
